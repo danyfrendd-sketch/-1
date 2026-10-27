@@ -1,3 +1,7 @@
+/* City map — Tactical city map generation, rendering, zoom and map controls.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
 // ===== v8: тактическая карта =====
 const MS=8,MX=34,MY=86,MFW=W*MS+MX*2,MFH=H*MS+MY+206;let MAPSVG=null,mapTh='paper',MFO=0,mapZ=.9;
 const MPAL={paper:{bg:'#e6d6ae',ink:'#4a3921',grid:'#7a5e34',rdc:'#6c5738',rdf:'#f7eed3',hwc:'#8f431c',hwf:'#eea84e',wat:'#a5c8d8',wte:'#5d8ca6',bld:'#b09a74',ble:'#5a4630',pl:'#f4ead0',tre:'#6f9a52',G:'#e2b99b',D:'#b2bfd8',R:'#e8d8a4',V:'#dcdcb0',M:'#e6b4c6',C:'#b9d7b0',I:'#d4c48e',X:'#e0a89b',P:'#b4d698',F:'#e0d6b8',H:'#a9c9da',pier:'#8a6a42',quay:'#cdbf98'},
