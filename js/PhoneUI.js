@@ -1,5 +1,5 @@
-/* Phone UI and actions — phone rendering and app interactions.
- * Depends on Phone.js and Map.js; load after both.
+/* Phone screens — Phone home screen and app rendering.
+ * Extracted from the original game.js; classic script, shared global scope.
  */
 function phR(){const c=$('phc'),bk='<button class="pb2" data-a="back">‹ Назад</button>';phHdr();let h='';
  if(!papp)h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">'+APPS.map(a=>`<button class="pa" data-a="app:${a[2]}"><span style="font-size:30px">${a[0]}</span><br>${a[1]}${a[2]=='msg'&&phone.un?' <b style="color:#f55">●'+phone.un+'</b>':''}</button>`).join('')+'</div>';
@@ -17,16 +17,3 @@ function phR(){const c=$('phc'),bk='<button class="pb2" data-a="back">‹ Наз
  +'<div class="ph2">Палатки</div>'+(dk.pots.length?dk.pots.map((p,i)=>r('🌱 #'+(i+1)+' '+(p.s==0?'пусто':p.s==1?'земля есть':'рост '+(p.g|0)+'% · влага '+(p.m|0)+'%'),p.s==2?(p.f?'🧪':'')+(p.p?'📈':'')+(p.sp?'⚡':'')+(p.g>=100?' зрелое!':''):'',p.s==0?'p'+i+'s':p.s==1?'p'+i+'d':p.g>=100?'p'+i+'h':'p'+i+'w',p.s==0?'Земля':p.s==1?'Посадить':p.g>=100?'Собрать':'Полить')+(p.s==2&&p.g<100?r('','добавки из рюкзака','p'+i+'u','+ добавки'):'')).join(''):'<div class="pn2">Купи Grow Tent.</div>')
  +'<div class="ph2">Продукт</div>'+r('🌿 Сырой: '+dk.bud.length+' · 🪵 Сушка: '+dk.dry.length,dk.bud.map(q=>'★'+q).join(' ')||'—','zdry','Сушить')+r('📦 Упаковано: '+dk.pack.length,dk.pack.map(q=>'★'+q).join(' ')||'нужны пакеты и станция','zpack','Упаковать')+r('Сбыть лично','55 € × ★, heat растёт','zsell','Сбыть')+r('Взятка','300 €: heat −30','zbribe','Дать')+r('Отмыть через ларёк',own?'500 € → 400 €, heat −15':'нужен ларёк','zwash','Отмыть')+'<div class="pn2">Ботаник из «Найма» сам сажает, поливает и собирает до 8 палаток из запаса земли и семян. Только игровые числа.</div>'}}
  c.innerHTML=h;if(papp=='map')mmDraw()}
-function phAct(a){const[k,v]=a.split(':');
- if(k=='mapfs'){mapOpen();return}if(k=='app'){papp=v;if(v=='msg'){phone.un=0;$('phb').textContent='📱'}}else if(k=='back')papp=null;
- else if(k=='buy'){const it=ITEMS[v];if(pay(it.p)){addItem(v,1);toast(it.ic+' '+it.n+' — в рюкзаке')}}
- else if(k=='use'){const it=ITEMS[v];if(it&&it.use&&removeItem(v,1))toast(it.use())}
- else if(k=='up'){const u=UP.find(q=>q[0]==v);if(!apt.own)toast('Сначала купи квартиру в подъезде');else if(apt.it[v])toast('Уже стоит');else if(pay(u[2])){apt.it[v]=1;toast('🛋 '+u[1]+' доставлен в квартиру')}}
- if(k=='hire'){const c=cands[v|0];if(c&&pay(c.w*2)){emp.push({id:'e'+(t|0)+v,n:c.n,r:c.r,s:c.s,l:60+(Math.random()*30|0),w:c.w});cands.splice(v|0,1);toast('👥 '+c.n+' нанят')}}
- else if(k=='fire'){const e=emp.splice(v|0,1)[0];if(e)toast(e.n+' уволен')}
- else if(k=='raise'){const e=emp[v|0];if(e&&e.s<5&&pay(e.w*5)){e.s++;e.w=Math.round(e.w*1.25);e.l=Math.min(100,e.l+10);toast(e.n+': навык '+e.s)}}
- else if(k=='dk')darkAct(v);
- else if(k=='tv'){if(!apt.own)toast('ТВ — в твоей квартире');else{adv(.33);en=Math.min(100,en+6);if(v=='news'){const c=coins[Math.random()*3|0],up=Math.random()<.5;c.p*=up?1.1:.9;toast('📰 '+c.n+(up?' растёт':' падает'))}else if(v=='ad')toast('📢 Скидки на энергетики — глянь в магазине');else if(v=='crime'){heat=Math.max(0,heat-3);toast('🚨 Полиция проверяет районы')}else toast(rain?'🌧 Дожди':'☀ Ясно')}}
- phR()}
-
-$('phb').onclick=phOpen;$('phx').onclick=phClose;$('mfx').onclick=mapClose;$('mft').onclick=()=>{mapTh=mapTh=='paper'?'bp':'paper';MAPSVG=null;mapFill();if(PH&&papp=='map')phR()};$('mfp').onclick=()=>{mapZ=Math.min(2.2,mapZ+.25);mapFill()};$('mfm').onclick=()=>{mapZ=Math.max(.45,mapZ-.25);mapFill()};$('phc').onclick=e=>{const b=e.target.closest('[data-a]');if(b)phAct(b.dataset.a)};
