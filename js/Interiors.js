@@ -1,3 +1,7 @@
+/* Interiors and buildings — Entering buildings, room layouts, actions and interior rendering.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
 // ===== v5: подъезд =====
 function fl(q){FL=q;inn.o=lay(inn.b.n,'home',inn.b)}
 function homeAct(a,n,I){
