@@ -1,30 +1,77 @@
-function phR(){const c=$('phc'),bk='<button class="pb2" data-a="back">‹ Назад</button>';phHdr();let h='';
- if(!papp)h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">'+APPS.map(a=>`<button class="pa" data-a="app:${a[2]}"><span style="font-size:30px">${a[0]}</span><br>${a[1]}${a[2]=='msg'&&phone.un?' <b style="color:#f55">●'+phone.un+'</b>':''}</button>`).join('')+'</div>';
- else if(papp=='map')h=bk+`<div data-a="mapfs" style="margin-top:8px;border-radius:10px;overflow:hidden;border:2px solid #2b2f40">${mapSvg()}</div><button class="pb2" data-a="mapfs" style="margin-top:8px;width:100%">🔍 Открыть карту на весь экран</button><div class="pn2">Детализированная карта Брокевиля: районы, кварталы зданий, парки, река, гавань, мосты, магистрали и координатная сетка. Переключай «Бумага / Чертёж», приближай карту кнопками +/− и ищи своё положение по жёлтому маркеру.</div>`;
- else if(papp=='shop'){const row=(ic,n,d,a,p)=>`<div class="pr"><span>${ic} ${n}<small>${d}</small></span><button class="pb2" data-a="${a}">${p}</button></div>`;
-  h=bk+'<div class="ph2">Еда и расходники</div>'+Object.entries(ITEMS).map(([k,v])=>row(v.ic,v.n,v.d,'buy:'+k,v.p+' €')).join('')+'<div class="ph2">Мебель для квартиры'+(apt.own?'':' (нужна квартира)')+'</div>'+UP.map(([k,n,p])=>row('🛋',n,apt.it[k]?'уже стоит':'ставится в квартиру','up:'+k,apt.it[k]?'✔':p+' €')).join('')+'<div class="ph2">Скоро</div><div class="pn2">Оборудование для магазина и транспорт — в следующих фазах.</div>'}
- else if(papp=='bag'){const L=inventory.filter(q=>ITEMS[q.id]);h=bk+'<div class="ph2">Рюкзак</div>'+(L.length?L.map(q=>{const v=ITEMS[q.id];return `<div class="pr"><span>${v.ic} ${v.n} ×${q.count}<small>${v.d}</small></span>${v.use?`<button class="pb2" data-a="use:${q.id}">Использовать</button>`:''}</div>`}).join(''):'<div class="pn2">Пусто. Купи что-нибудь в приложении «Магазин».</div>')}
- else if(papp=='msg')h=bk+'<div class="ph2">Сообщения</div>'+phone.msgs.map(m=>`<div class="pr" style="display:block"><b>${m[0]}</b> <small style="display:inline">${m[2]}</small><br>${m[1]}</div>`).join('');
- else if(papp=='bank')h=bk+`<div class="ph2">Баланс: ${money|0} €${debt?' · долг '+debt+' €':''}</div>`+coins.map(q=>`<div class="pr"><span>${q.n}<small>у тебя ${q.a.toFixed(2)}</small></span><b>${q.p.toFixed(1)} €</b></div>`).join('')+'<div class="ph2">История операций</div>'+(led.length?led.map(e=>`<div class="pr"><span>${e[0]}</span><b style="color:${e[1]>0?'#6c6':'#e66'}">${e[1]>0?'+':''}${e[1]} €</b></div>`).join(''):'<div class="pn2">Пока пусто</div>');
- else if(papp=='stat'){const S=(a,b)=>`<div class="pr"><span>${a}</span><b>${b}</b></div>`;h=bk+'<div class="ph2">Статистика</div>'+S('Статус',STG)+S('Капитал',(NWV|0)+' €')+S('Наличные',(money|0)+' €')+S('Долг',debt+' €')+S('Ларёк',own?'есть':'нет')+S('Квартира',apt.own?'есть':'нет')+S('Машина',veh.own?'есть':'нет')+S('Скутер',scoot?'есть':'нет')+S('Heat (внимание)',heat|0)+S('Сотрудники',emp.length)+S('Версия сохранения',SV)}
- else if(papp=='hire'){const R2={cashier:'Кассир',porter:'Грузчик',guard:'Охранник',courier:'Курьер',dealer:'Дилер',botanist:'Ботаник'};h=bk+'<div class="ph2">Кандидаты (обновляются раз в сутки)</div>'+cands.map((c,i)=>`<div class="pr"><span>${c.n} · ${R2[c.r]}<small>навык ${c.s}/5 · ${c.w} €/день · ${c.t}</small></span><button class="pb2" data-a="hire:${i}">Нанять</button></div>`).join('')+`<div class="ph2">Команда (${emp.length})</div>`+(emp.length?emp.map((e,i)=>`<div class="pr"><span>${e.n} · ${R2[e.r]}<small>навык ${e.s} · лояльность ${e.l|0} · ${e.w} €/день</small></span><span><button class="pb2" data-a="raise:${i}">⬆</button> <button class="pb2" data-a="fire:${i}">✕</button></span></div>`).join(''):'<div class="pn2">Никого нет.</div>')+'<div class="pn2">Зарплаты — раз в сутки. Кассир и грузчик работают на ларёк, охранник снижает кражи, курьер приносит доход, дилер продаёт особый товар. Найм = депозит 2× зарплаты.</div>'}
- else if(papp=='tv'){h=bk+'<div class="ph2">📺 Телевизор'+(apt.own?'':' (нужна квартира)')+'</div>'+[['news','📰 Новости'],['ad','📢 Реклама'],['crime','🚨 Криминальная хроника'],['wx','⛅ Погода']].map(c=>`<div class="pr"><span>${c[1]}<small>+энергия, +20 мин</small></span><button class="pb2" data-a="tv:${c[0]}">Смотреть</button></div>`).join('')}
- else if(papp=='dark'){h=bk+'<div class="ph2">🕶 Тень — «Лунный мох» (вымышленная культура)</div>';if(NWV<1500)h+='<div class="pn2">Контакты появятся при капитале 1500 €.</div>';else{const r=(a,b,c,d)=>`<div class="pr"><span>${a}<small>${b}</small></span>${c?`<button class="pb2" data-a="dk:${c}">${d}</button>`:''}</div>`;
- h+=r('🚔 Heat: '+(heat|0),'выше 70 — облавы и предательства','','')+'<div class="ph2">Снабжение</div>'+Object.entries(SH).map(([k,v])=>r(v[1]+' · '+v[0]+' €',v[2]+' · есть: '+(k=='tent'?dk.pots.length:dk[k]||0)+(k=='seed'&&dk.ord.length?' (в пути '+dk.ord.length+')':''),'b'+k,'Купить')).join('')
- +'<div class="ph2">Палатки</div>'+(dk.pots.length?dk.pots.map((p,i)=>r('🌱 #'+(i+1)+' '+(p.s==0?'пусто':p.s==1?'земля есть':'рост '+(p.g|0)+'% · влага '+(p.m|0)+'%'),p.s==2?(p.f?'🧪':'')+(p.p?'📈':'')+(p.sp?'⚡':'')+(p.g>=100?' зрелое!':''):'',p.s==0?'p'+i+'s':p.s==1?'p'+i+'d':p.g>=100?'p'+i+'h':'p'+i+'w',p.s==0?'Земля':p.s==1?'Посадить':p.g>=100?'Собрать':'Полить')+(p.s==2&&p.g<100?r('','добавки из рюкзака','p'+i+'u','+ добавки'):'')).join(''):'<div class="pn2">Купи Grow Tent.</div>')
- +'<div class="ph2">Продукт</div>'+r('🌿 Сырой: '+dk.bud.length+' · 🪵 Сушка: '+dk.dry.length,dk.bud.map(q=>'★'+q).join(' ')||'—','zdry','Сушить')+r('📦 Упаковано: '+dk.pack.length,dk.pack.map(q=>'★'+q).join(' ')||'нужны пакеты и станция','zpack','Упаковать')+r('Сбыть лично','55 € × ★, heat растёт','zsell','Сбыть')+r('Взятка','300 €: heat −30','zbribe','Дать')+r('Отмыть через ларёк',own?'500 € → 400 €, heat −15':'нужен ларёк','zwash','Отмыть')+'<div class="pn2">Ботаник из «Найма» сам сажает, поливает и собирает до 8 палаток из запаса земли и семян. Только игровые числа.</div>'}}
- c.innerHTML=h;if(papp=='map')mmDraw()}
-function phAct(a){const[k,v]=a.split(':');
- if(k=='mapfs'){mapOpen();return}if(k=='app'){papp=v;if(v=='msg'){phone.un=0;$('phb').textContent='📱'}}else if(k=='back')papp=null;
- else if(k=='buy'){const it=ITEMS[v];if(pay(it.p)){addItem(v,1);toast(it.ic+' '+it.n+' — в рюкзаке')}}
- else if(k=='use'){const it=ITEMS[v];if(it&&it.use&&removeItem(v,1))toast(it.use())}
- else if(k=='up'){const u=UP.find(q=>q[0]==v);if(!apt.own)toast('Сначала купи квартиру в подъезде');else if(apt.it[v])toast('Уже стоит');else if(pay(u[2])){apt.it[v]=1;toast('🛋 '+u[1]+' доставлен в квартиру')}}
- if(k=='hire'){const c=cands[v|0];if(c&&pay(c.w*2)){emp.push({id:'e'+(t|0)+v,n:c.n,r:c.r,s:c.s,l:60+(Math.random()*30|0),w:c.w});cands.splice(v|0,1);toast('👥 '+c.n+' нанят')}}
- else if(k=='fire'){const e=emp.splice(v|0,1)[0];if(e)toast(e.n+' уволен')}
- else if(k=='raise'){const e=emp[v|0];if(e&&e.s<5&&pay(e.w*5)){e.s++;e.w=Math.round(e.w*1.25);e.l=Math.min(100,e.l+10);toast(e.n+': навык '+e.s)}}
- else if(k=='dk')darkAct(v);
- else if(k=='tv'){if(!apt.own)toast('ТВ — в твоей квартире');else{adv(.33);en=Math.min(100,en+6);if(v=='news'){const c=coins[Math.random()*3|0],up=Math.random()<.5;c.p*=up?1.1:.9;toast('📰 '+c.n+(up?' растёт':' падает'))}else if(v=='ad')toast('📢 Скидки на энергетики — глянь в магазине');else if(v=='crime'){heat=Math.max(0,heat-3);toast('🚨 Полиция проверяет районы')}else toast(rain?'🌧 Дожди':'☀ Ясно')}}
- phR()}
-
-$('phb').onclick=phOpen;$('phx').onclick=phClose;$('mfx').onclick=mapClose;$('mft').onclick=()=>{mapTh=mapTh=='paper'?'bp':'paper';MAPSVG=null;mapFill();if(PH&&papp=='map')phR()};$('mfp').onclick=()=>{mapZ=Math.min(2.2,mapZ+.25);mapFill()};$('mfm').onclick=()=>{mapZ=Math.max(.45,mapZ-.25);mapFill()};$('phc').onclick=e=>{const b=e.target.closest('[data-a]');if(b)phAct(b.dataset.a)};
-
+/* Controls, menus and conversations — Touch/keyboard input, interaction menus and NPC chat.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
+// ввод
+const st=$('stick'),kn=$('knob');let jx=0,jy=0,keys={};
+function js(e){const r=st.getBoundingClientRect();let dx=e.clientX-r.left-60,dy=e.clientY-r.top-60,l=Math.hypot(dx,dy)||1,m=Math.min(l,50);
+ jx=dx/l*m/50;jy=dy/l*m/50;kn.style.left=40+dx/l*m+'px';kn.style.top=40+dy/l*m+'px'}
+st.onpointerdown=e=>{st.setPointerCapture(e.pointerId);js(e)};st.onpointermove=e=>{if(e.buttons||e.pressure)js(e)};
+st.onpointerup=st.onpointercancel=()=>{jx=jy=0;kn.style.left=kn.style.top='40px'};
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(e.key.toLowerCase()=='e'&&!cur&&document.activeElement!=$('inp'))doAct()});
+addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+let near=null;const pn=$('pn');let mf=null,msg='';
+const rew=()=>Math.round(order.r*(1+.08*style+.1*skill));
+const toast=q=>{const e=$('ts');e.textContent=q;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2200)};
+const say=q=>{msg=q;toast(q)};
+function cm(){mf=null;pn.style.display='none'}
+function menu(ti,fn){mf=fn;pn.style.display='flex';$('pt').textContent=ti;msg='';rm()}
+function rm(){if(!mf)return;const r=mf();$('pi').textContent=`€ ${money|0} · ⚡ ${en|0}% · 🎒 товаров ${goods}`;$('pm').textContent=msg;const c=$('pb');c.innerHTML='';for(const[x,f,im]of r){const b=document.createElement('button');b.className='b';if(im!=null){const k=document.createElement('canvas');k.width=k.height=48;art(k.getContext('2d'),im);k.style.cssText='vertical-align:middle;margin-right:10px;border-radius:8px;background:#242733';b.appendChild(k)}b.appendChild(document.createTextNode(x));b.onclick=()=>{if(f)f();rm()};c.appendChild(b)}}
+const pay=c=>money>=c?(money-=c,1):(say('Не хватает денег'),0);
+const adv=hr=>{const m=mins+hr*60;if(m>=1440)newDay();mins=m%1440};
+function work(hr,p,e,x){if(en<e){say('Нет сил: нужно ⚡'+e);return}en-=e;adv(hr);p=Math.round(p);money+=p;say(x+' +'+p+' €')}
+const sleep=c=>{if(pay(c)){if(mins>420)newDay();mins=420;en=100;say('Выспался: ⚡100%, 07:00')}};
+const eat=(c,e,x)=>{if(pay(c)){en=Math.min(100,en+e);say(x+' +'+e+'⚡')}};
+const rum=['Говорят, ДоджМем скоро улетит на луну.','На складе ищут грузчиков, платят неплохо.','Ларёк на углу можно купить за 1200 €.','Борис в ломбарде берёт товар по 40 €.','Скутер в автосалоне ускорит доставки.','ГенаКоин падает после слухов про налоги.'];
+function tickM(){if(Math.random()<.07)pmsg('Район',rum[Math.random()*rum.length|0]);for(const c of coins)c.p=Math.max(1,c.p*(1+(Math.random()-.46)*c.v*2));if(own&&stock>0){stock--;till+=48}}
+function rows(b){const n=b.n,R=[],a=(x,f,i)=>R.push([x,f,i]);
+ if(n=='Пиццерия'){if(order)a('Заказ уже у тебя',0);else a('📦 Взять заказ на доставку',()=>{let q;do q=B[Math.random()*B.length|0];while(q==b||Math.hypot(q.dx-b.dx,q.dy-b.dy)/T>55);order={b:q,r:40+Math.round(Math.hypot(q.dx-b.dx,q.dy-b.dy)/T*1.6)};cm();toast('Заказ: '+q.n)});dishes(a)}
+ else if(n.startsWith('Кафе'))dishes(a);
+ else if(n=='Ломбард'){a(`💍 Продать 1 товар (есть ${goods}) за 40 €`,()=>{if(goods>0){goods--;money+=40;say('+40 €')}else say('Нечего продавать')});a('Продать всё',()=>{money+=goods*40;say('+'+goods*40+' €');goods=0})}
+ else if(n=='Ларёк'){if(!own)a('🏪 Купить ларёк −1200 €',()=>{if(pay(1200)){own=1;say('Теперь это твой ларёк!')}});else{a(`📦 Закупить товар −25 € (на полке ${stock}/20)`,()=>{if(stock<20&&pay(25))stock++});a(`💰 Забрать выручку: ${till} €`,()=>{money+=till;say('+'+till+' €');till=0});a('🎒 Выложить товар из рюкзака',()=>{if(goods>0&&stock<20){goods--;stock++}})}}
+ else if(n=='Рынок'||n=='Супермаркет'){a('🛒 Купить товар −28 € (для перепродажи)',()=>{if(pay(28))goods++});a('🥖 Еда −12 € +20⚡',()=>eat(12,20,'Поел'))}
+ else if(n=='Дом')a('🛏 Снять комнату −25 €: спать до 07:00',()=>sleep(25));
+ else if(n=='Отель')a('🛎 Номер −80 €: сон до 07:00',()=>sleep(80));
+ else if(n=='Крипто-банк'){for(const c of coins){a(`📈 ${c.n}: ${c.p.toFixed(1)} € · у тебя ${c.a.toFixed(2)}`,0);a('   Купить на 100 € (комиссия 1%)',()=>{if(pay(100))c.a+=99/c.p});a(`   Продать всё (+${(c.a*c.p*.99)|0} €)`,()=>{money+=Math.round(c.a*c.p*.99);c.a=0})}
+  a(debt?`💳 Погасить долг ${debt} €`:'💳 Кредит 500 € (вернуть 600)',()=>{if(debt){if(pay(debt))debt=0}else{money+=500;debt=600}})}
+ else if(n=='Автосалон')a(veh.own?'🚗 Машина уже куплена':'🚗 Купить машину −2500 € (ездить, бензин, ремонт)',()=>{if(!veh.own&&pay(2500)){Object.assign(veh,{own:1,hp:100,f:100,x:b.dx+10,y:b.dy+36,d:0,v:0,col:['#c0392b','#2e86c1','#27ae60','#f1c40f','#ecf0f1','#8e44ad'][Math.random()*6|0]});say('Машина ждёт у входа!')}}),a(scoot?'🛵 Скутер уже куплен':'🛵 Купить скутер −900 € (скорость ×1.7)',()=>{if(!scoot&&pay(900))scoot=1});
+ else if(n=='Торговый центр')a('👗 Сменить облик: '+(PG?'женский → мужской':'мужской → женский'),()=>{PG^=1}),a(`👕 Новая одежда −60 € (стиль ${style}/5, +8% к доставкам)`,()=>{if(style<5&&pay(60))style++});
+ else if(n=='Кинотеатр')a('🎬 Фильм −25 € +20⚡ (2 ч)',()=>{if(pay(25)){en=Math.min(100,en+20);adv(2)}});
+ else if(n=='Казино')a('🎰 Ставка 20 € (шанс 45%, выигрыш ×2)',()=>{if(pay(20)){if(Math.random()<.45){money+=40;say('Выигрыш +40 €!')}else say('Проигрыш −20 €')}});
+ else if(n=='Аптека')a('💊 Витамины −30 € +30⚡',()=>eat(30,30,'Полегчало'));
+ else if(n=='Почта')a('✉ Проверить почту',()=>{if(Math.random()<.5){const m=5+(Math.random()*30|0);money+=m;say('Перевод +'+m+' €')}else say('Только реклама и счета')});
+ else if(n=='Школа')a(`🎓 Курсы курьера −100 € (уровень ${skill}/3, +10% к доставкам)`,()=>{if(skill<3&&pay(100))skill++});
+ else if(n=='Склад')a('📦 Смена грузчика, 1 ч: 45–120 €, −25⚡',()=>work(1,45+Math.random()*75,25,'Смена'));
+ else if(n=='Завод')a('🏭 Смена на заводе, 4 ч: 170 €, −45⚡',()=>work(4,170,45,'Смена'));
+ else if(n=='Автосервис')a('⛽ Заправить машину −15 €',()=>{if(!veh.own)say('Нет машины');else if(veh.f>95)say('Бак полный');else if(pay(15)){veh.f=100;say('Бак полный')}}),a('🛠 Починить кузов −40 €',()=>{if(!veh.own)say('Нет машины');else if(veh.hp>95)say('Кузов целый');else if(pay(40)){veh.hp=100;say('Как новая')}}),a('🔧 Помочь механику, 1 ч: 70 €, −20⚡',()=>work(1,70,20,'Подработка'));
+ else if(n=='Мойка')a('🚿 Мыть машины, 1 ч: 55 €, −20⚡',()=>work(1,55,20,'Помыл'));
+ else if(n=='Бар'){dishes(a);a('👂 Послушать слухи',()=>say(rum[Math.random()*rum.length|0]))}
+ else a('Закрыто',0);
+ a('✖ Выйти',cm);return R}
+function findNear(){near=null;let bd=50;const cn=(d,o)=>{if(d<bd){bd=d;near=o}};
+ for(const n of NP)if(!(n.in>t))cn(Math.hypot(n.x-px,n.y-py),{k:'npc',n,l:'Говорить: '+n.n});
+ for(const b of B)cn(Math.hypot(b.dx-px,b.dy-py)-6,{k:'bld',b,l:order&&order.b==b?'Отдать +'+rew()+' €':'Войти: '+b.n});
+ for(const p of props)if(p.k!='lamp'&&p.k!='boat')cn(Math.hypot(p.x-px,p.y-py),{k:'p',p,l:p.k=='bench'?'Сесть':'Порыться'});
+ if(veh.own&&!veh.on)cn(Math.hypot(veh.x-px,veh.y-py)-8,{k:'veh',l:'Сесть в машину'});if(veh.on)near={k:'veh2',l:'Выйти из машины'};$('act').textContent=near?near.l:'—';$('act').className=near?'on':''}
+function doAct(){if(PH)return;if(inn){inAct();return}if(!near||mf)return;const k=near.k;
+ if(k=='veh'){if(veh.hp<=0)toast('Машина разбита: нужен ремонт в автосервисе');else if(veh.f<=0)toast('Нет бензина: заправься в автосервисе');else{veh.on=1;veh.v=0;px=veh.x;py=veh.y;toast('Поехали! На красный не гони')}}else if(k=='veh2'){if(Math.abs(veh.v)>25)toast('Сначала остановись');else{veh.on=0;veh.x=px;veh.y=py;veh.v=0}}else if(k=='npc')openChat(near.n);
+ else if(k=='bld'){const b=near.b;if(order&&order.b==b){const r=rew();money+=r;toast('Доставлено +'+r+' €');order=null}else enter(b)}
+ else{const p=near.p;if(p.k=='bench'){en=Math.min(100,en+12);adv(.25);toast('Отдохнул +12⚡')}else if(t<p.t)toast('Пусто');else{p.t=t+90;if(Math.random()<.5){const m=3+(Math.random()*12|0);money+=m;toast('Нашёл '+m+' €')}else{goods++;toast('Нашёл хлам: можно продать')}}}}
+$('act').onpointerdown=e=>{e.preventDefault();doAct()};
+// чат с ИИ-жителями
+const fb=['Ну привет! Чем занят в наших краях?','Деньги — это хорошо. А у тебя сколько на кармане?','Слышал, в центре открыли новый банк. Пойдёшь туда?','А ты чего вообще приехал в Брокевиль?'];
+let smP=null;const getS=()=>smP||(smP=(window.claude?claude.use('sample'):Promise.resolve(null)).catch(()=>null));
+function addM(c,t){const d=document.createElement('div');d.className='m '+c;d.textContent=t;$('log').appendChild(d);$('log').scrollTop=1e9;return d}
+function persona(n){const hh=String(mins/60%24|0).padStart(2,'0')+':'+String(mins%60|0).padStart(2,'0');
+ return `Ты — ${n.n}, ${n.j}, житель вымышленного города Брокевиль (пиксельная игра на телефоне). Характер: ${n.tr}. Собеседник — игрок, новичок, приехал с 200 € и хочет стать хозяином города (курьер, магазин, крипта, машины). Сейчас у игрока ${money} €, время ${hh}${order?', он везёт пиццу':''}. Отвечай по-русски, 1–3 коротких фразы, строго в образе, только в рамках игры. Часто сам задавай игроку встречный вопрос (про планы, деньги, выбор пути, что он думает о других жителях) и реагируй на его ответы. Верни ТОЛЬКО JSON: {"say":"реплика","money":0}, где money — €, которые ты даёшь игроку (+) или просишь у него (−) прямо сейчас; обычно 0, максимум ±30, и только если это логично по разговору.`}
+async function ask(){busy=true;const w=addM('n','…');
+ let say=fb[Math.random()*4|0],mo=0;
+ try{const s=await getS();if(s){const ms=cur.h.map((m,i)=>i?m:{role:'user',content:persona(cur)+'\n\n'+m.content});
+  const r=await s(ms,{cache:false});const m=r.text.match(/\{[\s\S]*\}/);
+  try{const j=JSON.parse(m[0]);say=j.say||say;mo=+j.money||0}catch(e){say=r.text}}}catch(e){}
+ mo=Math.max(-30,Math.min(30,Math.round(mo)));if(money+mo<0)mo=0;money+=mo;
+ w.textContent=say+(mo?`  (${mo>0?'+':''}${mo} €)`:'');cur.h.push({role:'assistant',content:say});busy=false}
+function openChat(n){cur=n;$('chat').style.display='flex';$('nm').textContent=n.n;$('jb').textContent=n.j;$('log').innerHTML='';
+ n.h=[{role:'user',content:'*игрок подошёл к тебе*'}];ask()}
+function send(){const v=$('inp').value.trim();if(!v||busy)return;$('inp').value='';addM('p',v);cur.h.push({role:'user',content:v});ask()}
+$('snd').onclick=send;$('inp').onkeydown=e=>{if(e.key=='Enter')send()};$('x').onclick=()=>{cur=null;$('chat').style.display='none'};
