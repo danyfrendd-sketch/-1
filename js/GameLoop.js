@@ -1,3 +1,7 @@
+/* Game loop and persistence — Animation frame, render/update loop and periodic localStorage saves.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
 function frame(){requestAnimationFrame(frame);const dt=.016;t+=dt;mins+=dt*2;if(mins>=1440){mins-=1440;newDay()}rain=h(Math.floor(t/100),5)>.7?1:0;rA+=(rain-rA)*dt*.5;
  let vx=jx+((keys.d||keys.arrowright)?1:0)-((keys.a||keys.arrowleft)?1:0),vy=jy+((keys.s||keys.arrowdown)?1:0)-((keys.w||keys.arrowup)?1:0);
  const l=Math.hypot(vx,vy),mv=l>.1&&!cur&&!mf&&!inn&&!PH;
@@ -46,4 +50,3 @@ R.sort((a,b)=>a[0]-b[0]);for(const r of R)r[1]();
 frame();
 setInterval(()=>{try{localStorage.setItem('brk3',JSON.stringify({v:{own:veh.own,x:veh.on?px:veh.x,y:veh.on?py:veh.y,hp:veh.hp,f:veh.f,col:veh.col,d:veh.d},pg:PG}))}catch(e){}},5000);
 setInterval(()=>{if(noSave)return;try{localStorage.setItem('brk2',JSON.stringify({money,mins,en,goods,debt,own,stock,till,scoot,style,skill,sv:SV,emp,heat,dk,inv:inventory,ph:phone,x:px,y:py,apt,c:coins.map(c=>[c.a,c.p])}))}catch(e){}},5000);
-
