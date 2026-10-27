@@ -1,3 +1,7 @@
+/* Economy and side systems — Employees, day rollover, inventory economy and growing system.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
 function genCands(){cands=[];const rl=['cashier','porter','guard','courier','dealer','botanist'];for(let i=0;i<3+(Math.random()*4|0);i++){const s=1+(Math.random()*5|0);cands.push({n:nm2[Math.random()*nm2.length|0],r:rl[Math.random()*6|0],s,w:40+s*20+(Math.random()*20|0),t:tr2[Math.random()*tr2.length|0]})}}
 function newDay(){genCands();if(dk.pots.length>3)heat+=1;let tot=0;for(const e of emp)tot+=e.w;
  if(tot){if(money>=tot){money-=tot;for(const e of emp)e.l=Math.min(100,e.l+2);pmsg('Бухгалтерия','Зарплаты выплачены: '+tot+' €')}else{for(const e of emp)e.l-=15;pmsg('Бухгалтерия','Нет денег на зарплаты! Люди недовольны.')}}
