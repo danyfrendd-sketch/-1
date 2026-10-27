@@ -1,64 +1,10 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>Брокевиль</title>
-    <link rel="stylesheet" href="styles/main.css" />
-  </head>
-  <body>
-    <div id="app">
-      <canvas id="c"></canvas>
-      <div id="hud"></div>
-      <div id="stick">
-        <div id="knob"></div>
-      </div>
-      <button id="act">—</button>
-      <button id="phb">📱</button>
-
-      <div id="ph">
-        <div id="phs">
-          <span id="pht"></span>
-          <span>📶 🔋</span>
-        </div>
-        <div id="phc"></div>
-        <button id="phx">⌂ Закрыть</button>
-      </div>
-
-      <div id="mapfs">
-        <div id="mfh">
-          <span id="mft">Тема</span>
-          <button id="mfx">✕</button>
-        </div>
-        <div id="mfb"></div>
-      </div>
-
-      <div id="chat">
-        <div id="top">
-          <div>
-            <span id="nm"></span>
-            <small id="jb"></small>
-          </div>
-          <button id="x">✕</button>
-        </div>
-        <div id="log"></div>
-        <div id="row">
-          <input id="inp" placeholder="Скажи что-нибудь…" autocomplete="off" />
-          <button id="snd">➤</button>
-        </div>
-      </div>
-
-      <div id="pn">
-        <div id="pt"></div>
-        <div id="pi"></div>
-        <div id="pm"></div>
-        <div id="pb"></div>
-      </div>
-
-      <div id="ts"></div>
-    </div>
-
-    <script type="module" src="src/main.js"></script>
-  </body>
-</html>
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><title>Брокевиль</title>
+<link rel="stylesheet" href="css/style.css"></head><body>
+<canvas id="c"></canvas><div id="hud"></div>
+<div id="stick"><div id="knob"></div></div><button id="act">—</button>
+<button id="phb">📱</button><div id="ph"><div id="phs"><span id="pht"></span><span>📶 🔋</span></div><div id="phc"></div><button id="phx">⌂ Закрыть</button></div><div id="mapfs"><div id="mfh"><b>🗺 Карта города</b><span><button id="mfm">−</button><button id="mfp">+</button><button id="mft">Бумага / Чертёж</button><button id="mfx">✕</button></span></div><div id="mfb"></div></div><div id="ts"></div><div id="pn"><div id="pt"></div><div id="pi"></div><div id="pm"></div><div id="pb"></div></div>
+<div id="chat"><div id="top"><div><span id="nm"></span><small id="jb"></small></div><button id="x">✕</button></div>
+<div id="log"></div><div id="row"><input id="inp" placeholder="Скажи что-нибудь…" autocomplete="off"><button id="snd">➤</button></div></div>
+<script src="js/game.js"></script></body></html>
