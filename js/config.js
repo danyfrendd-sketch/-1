@@ -1,7 +1,7 @@
-/* Game state and world setup — Core constants, map generation, player defaults, NPC setup and save restoration.
- * Extracted from the original game.js. Load as a classic script in index.html.
- * Keep script order in index.html: these sections share the original global scope.
+/* World and configuration — World generation, map data, buildings and initial player position.
+ * Extracted from the original game.js; classic script, shared global scope.
  */
+function newDk(){return{u:0,seed:0,soil:0,fert:0,pgr:0,spd:0,bag:0,rack:0,spr:0,pk:0,pots:[],bud:[],dry:[],pack:[],ord:[],ft:0}}
 const T=32,W=180,H=90,$=i=>document.getElementById(i),cv=$('c'),cx=cv.getContext('2d');
 let Z=2,t=0,money=200,mins=480,en=100,order=null,cur=null,busy=false,px=0,py=0,pd=0,pf=0,debt=0,own=0,stock=0,till=0,scoot=0,style=0,skill=0,tk=0;const coins=[{n:'БрокКоин',p:100,a:0,v:.05},{n:'ДоджМем',p:20,a:0,v:.2},{n:'ГенаКоин',p:50,a:0,v:.1}];
 // ===== v6: предметы и инвентарь =====
@@ -64,20 +64,3 @@ let apt={own:0,it:{}},OLDSV=0;px=SB.dx;py=SB.dy+14;
 
 try{const q=JSON.parse(localStorage.getItem('brk2')||'null');if(q&&(q.sv||0)>SV)noSave=1;if(q&&!noSave){({money,mins,en,goods,debt,own,stock,till,scoot,style,skill}=q);if((q.sv||0)>=9){px=q.x;py=q.y}else OLDSV=1;if(q.apt)apt=q.apt;if(Array.isArray(q.inv))inventory=q.inv;if(q.ph&&q.ph.msgs)phone=q.ph;if(q.emp)emp=q.emp;heat=q.heat||0;if(q.dk&&q.dk.pots)dk=q.dk;q.c.forEach((a,i)=>{coins[i].a=a[0];coins[i].p=a[1]})}}catch(e){}
 if(OLDSV){if(apt.own)money+=200;apt={own:0,it:apt.it||{}};phone.msgs.unshift(['Мэрия','Город перепланирован по новому генплану! Прежняя квартира выкуплена, 200 € возвращены.','08:00'])}
-// жители с ИИ
-const P=[['Гена','владелец кафе «У Гены», 54 года','ворчливый, но добрый, любит байки и дешёвые обеды'],
-['Лиза','курьер на самокате, 22 года','быстрая, шутливая, знает короткие пути'],
-['Борис','хозяин ломбарда, 61 год','хитрый, торгуется по любому поводу'],
-['Нина','продавщица в аптеке, 38 лет','заботливая, всё знает про слухи района'],
-['Макс','студент и начинающий крипто-трейдер, 20 лет','азартный, вечно без денег, сыплет «советами»'],
-['Тамара','пенсионерка с лавочки, 72 года','любопытная болтушка, помнит город лучше всех'],
-['Рустам','водитель такси, 45 лет','циничный, философ, жалуется на пробки'],
-['Ира','блогер, 26 лет','болтливая, ищет сюжеты для видео']];
-const nm2=['Антон','Оля','Витя','Света','Паша','Катя','Денис','Юля','Миша','Аня','Егор','Вера','Олег','Дана','Стас','Рита','Кирилл','Зоя','Лёва','Мила'],jb=['охранник','студентка','рабочий завода','бариста','таксист','почтальон','строитель','продавец','художник','бухгалтер'],tr2=['весёлый','угрюмый','любопытный','жадный','добрый','саркастичный'];
-nm2.forEach((n,i)=>P.push([n,jb[i%10]+', '+(18+(i*7)%45)+' лет',tr2[i%6]]));
-const cols=['#c0392b','#2e86c1','#7d3c98','#d4ac0d','#27ae60','#e67e22','#16a085','#d35400'];
-const hairs=['#2b1b12','#d8b25a','#999','#5a3a22','#111'];
-const FEM=new Set(['Лиза','Нина','Тамара','Ира','Оля','Света','Катя','Юля','Аня','Вера','Дана','Рита','Зоя','Мила']);
-const NP=P.map((p,i)=>{let x,y,a=0;do{const fx=i<20?90+h(i,5+a)*45:h(i,5+a)*W,fy=i<20?h(i,9+a*3)*45:h(i,9+a*3)*H;x=(fx|0)*T+16;y=(fy|0)*T+24;a++}while(a<800&&(solid(x,y)||g[y/T|0][x/T|0]!=2));
- const o={g:FEM.has(p[0])?1:0,bd:!FEM.has(p[0])&&i%3==0,n:p[0],j:p[1],tr:p[2],x,y,c:i<8?cols[i]:'hsl('+(i*47%360)+',55%,45%)',hr:hairs[i%5],vx:0,vy:0,tm:0,d:0,h:[]};return o});
-try{const q=JSON.parse(localStorage.getItem('brk3')||'null');if(q){Object.assign(veh,q.v);PG=q.pg|0;veh.on=0;if(OLDSV){veh.x=px+30;veh.y=py}}}catch(e){}
