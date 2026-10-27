@@ -1,3 +1,7 @@
+/* Vehicles and traffic — Traffic, driving, collisions and traffic lights.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
 // ===== v5: светофоры/машины =====
 let veh={own:0,on:0,x:0,y:0,hp:100,f:100,v:0,d:0,col:'#c0392b',ct:0,lt:0},PG=0,shk=0,DN=0,FL=1,hitT=0;
 const lt=ax=>{const p=t%12;return ax==0?(p<.5?'r':p<5.5?'g':p<6?'y':'r'):(p<6.5?'r':p<11.5?'g':'y')};
