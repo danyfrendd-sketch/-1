@@ -1,3 +1,8 @@
+/* World rendering — Buildings, characters and drawing helpers.
+ * Extracted from the original game.js. Load as a classic script in index.html.
+ * Keep script order in index.html: these sections share the original global scope.
+ */
+// рисование
 function bld(b,dark){const x=b.x*T,y=b.y*T,w=b.w*T,H2=b.h*T,fy=y+48,fh=H2-48,m=b.m,dcl=b.w>>1,n=b.n,s=b.sd,K=kind(n),mid=x+w/2,night=dark>.2,
  R=(k,X,Y,W,H)=>{cx.fillStyle=k;cx.fillRect(X,Y,W,H)},tri=(k,a,b2,c2,d2,e,f)=>{cx.fillStyle=k;cx.beginPath();cx.moveTo(a,b2);cx.lineTo(c2,d2);cx.lineTo(e,f);cx.fill()},
  smoke=(X,Y)=>{cx.fillStyle='rgba(200,200,200,.35)';for(let i=0;i<3;i++){cx.beginPath();cx.arc(X+Math.sin(t+i)*4+i*3,Y-((t*10+i*9)%26),4+i,0,7);cx.fill()}};
@@ -55,3 +60,16 @@ function bld(b,dark){const x=b.x*T,y=b.y*T,w=b.w*T,H2=b.h*T,fy=y+48,fh=H2-48,m=b
  if(K=='home'){cx.fillStyle='#fff';cx.font='bold 8px system-ui';cx.textAlign='center';cx.fillText('№'+(b.x+b.y),dx+16,d0-13)}
  if(s>.4){R('#8a4a2a',dx-10,y+H2-12,8,10);R('#3c8040',dx-11,y+H2-20,10,9)}}
 
+// ===== v5: люди м/ж =====
+function person(x,y,c,hr,d,f,mv,G,bd){const s=mv?(f?2:-2):0,sk='#e8b98e',R=(k,X,Y,W,H)=>{cx.fillStyle=k;cx.fillRect(X,Y,W,H)};
+ cx.fillStyle='rgba(0,0,0,.3)';cx.beginPath();cx.ellipse(x,y,9,3,0,0,7);cx.fill();
+ if(G&&d!=0)R(hr,x-6,y-43,12,d==1?21:16);
+ if(G){R(sk,x-4,y-10,3,9+(s>0?-1:0));R(sk,x+1,y-10,3,9+(s>0?0:-1));R('#a33',x-6,y-2+(s>0?-1:0),5,2);R('#a33',x+1,y-2,5,2)}
+ else{R('#2b2f4a',x-5,y-13,4,13+(s>0?-1:0));R('#2b2f4a',x+1,y-13,4,s>0?13:12);R('#111',x-6,y-2+(s>0?-1:0),5,2);R('#111',x+1,y-2,5,2)}
+ if(G){R(c,x-5,y-30,10,13);R('rgba(255,255,255,.2)',x-5,y-30,10,3);const w=Math.sin(t*12)*(mv?1:0);R(c,x-6,y-19,12,3);R(c,x-8+w,y-16,16,6);R('rgba(255,255,255,.25)',x-8+w,y-11,16,1);R(c,x-8,y-29+s/2,3,11);R(c,x+5,y-29-s/2,3,11);R(sk,x-8,y-18+s/2,3,3);R(sk,x+5,y-18-s/2,3,3)}
+ else{R(c,x-7,y-30,14,18);R('rgba(0,0,0,.18)',x-7,y-16,14,4);R('#222',x-7,y-14,14,2);R(c,x-10,y-29+s/2,3,12);R(c,x+7,y-29-s/2,3,12);R(sk,x-10,y-18+s/2,3,3);R(sk,x+7,y-18-s/2,3,3)}
+ R(sk,x-5,y-41,10,11);
+ if(G){R(hr,x-6,y-43,12,d==1?13:6);if(d!=1){R(hr,x-6,y-41,2,12);R(hr,x+4,y-41,2,12);R(hr,x-4,y-38,8,2)}R('#ff6fa8',x+2,y-45,4,3)}
+ else R(hr,x-5,y-42,10,d==1?9:4);
+ if(d!=1){const o=d==2?-2:d==3?2:0;R('#fff',x-4+o,y-37,3,3);R('#fff',x+1+o,y-37,3,3);R('#222',x-3+o,y-36,2,2);R('#222',x+2+o,y-36,2,2);
+  if(G){R('#222',x-4+o,y-38,3,1);R('#222',x+1+o,y-38,3,1);R('#d2455e',x-1+o,y-32,3,1)}else{R('#3a2a1a',x-4+o,y-39,3,1);R('#3a2a1a',x+1+o,y-39,3,1);if(bd)R(hr,x-4+o,y-33,8,3)}}}
